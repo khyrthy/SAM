@@ -44,17 +44,9 @@ else :
 
             err = makepkg.makepkg(sys.argv[2])
 
-            if err == 1:
+            if err != None:
 
-                print(Fore.RED + "ERROR : the specified folder doesn't exists")
-                print(Style.RESET_ALL)
-                print("SPM Exited with error code 1")
-
-            elif err == 2:
-
-                print(Fore.RED + "ERROR : the specified folder isn't a folder")
-                print(Style.RESET_ALL)
-                print("SPM Exited with error code 2")
+                print(Fore.RED + "SPM Exited with error code " + str(err) + Style.RESET_ALL)
 
 
     else:
