@@ -3,7 +3,7 @@
 # The SPM Main
 # It manages every function of the SPM program
 
-import sys
+import sys, subprocess
 
 # Import the spm modules
 import makepkg
@@ -12,6 +12,11 @@ import makepkg
 from colorama import Fore, Style
 
 print(Fore.GREEN + "[SPM 0.1]" + Style.RESET_ALL)
+
+# Check if necessary packages are installed
+if subprocess.call(["which", "tar"], stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT) != 0:
+    print(Fore.RED + "ERROR : Missing tar" + Style.RESET_ALL)
+    sys.exit()
 
 # The program works with a arg command
 if len(sys.argv) == 1:
@@ -44,10 +49,13 @@ else :
 
             err = makepkg.makepkg(sys.argv[2])
 
-            if err != None:
+            if err != None and err != 0:
 
                 print(Fore.RED + "SPM Exited with error code " + str(err) + Style.RESET_ALL)
 
+            else:
+
+                print(Fore.GREEN + "SPM ran successfully" + Style.RESET_ALL)
 
     else:
 

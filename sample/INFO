@@ -1,8 +1,0 @@
-# The comment is not detected by the program
-PackageName=Sample
-Name=Sample Package Test
-Version=2.01
-Description=This is a test package
-Exec=hello
-
-Desktop=False

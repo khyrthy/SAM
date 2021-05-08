@@ -1,7 +1,7 @@
 # The makepkg module
 # Used to generate a spm package
 
-import os, utils
+import os, utils, subprocess
 
 def makepkg(foldername):
 
@@ -161,4 +161,21 @@ def makepkg(foldername):
     else:
 
         print("Operation Aborted Successfully.")
-        return None
+        return 0
+
+    print("\nStarting building the package...")
+
+    print("Moving folder...")
+    
+    os.rename(foldername, INFO["PackageName"])
+
+    print("Building package...")
+
+    folder_listing = []
+
+    for file in os.listdir(INFO["PackageName"]):
+
+        folder_listing.append(foldername + "/" + file)
+
+
+    subprocess.call(["tar", "-cf", INFO["PackageName"] + ".spm"] + folder_listing)
