@@ -49,13 +49,18 @@ else :
 
             err = makepkg.makepkg(sys.argv[2])
 
-            if err != None and err != 0:
+            if type(err) == int and err != None and err != 0:
 
                 print(Fore.RED + "SPM Exited with error code " + str(err) + Style.RESET_ALL)
+
+            elif err == "unknown":
+
+                print(Fore.RED + "An unknown error occurred" + Style.RESET_ALL)
 
             else:
 
                 print(Fore.GREEN + "SPM ran successfully" + Style.RESET_ALL)
+
 
     else:
 

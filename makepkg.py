@@ -1,7 +1,7 @@
 # The makepkg module
 # Used to generate a spm package
 
-import os, utils, subprocess
+import os, utils, subprocess, shutil
 
 def makepkg(foldername):
 
@@ -15,7 +15,7 @@ def makepkg(foldername):
         return 1
     except NotADirectoryError:
         print("ERROR : The specified element is not a directory")
-        return 2
+        return 1
 
     # Check if all the necessary files exists
 
@@ -52,7 +52,7 @@ def makepkg(foldername):
 
     else:
         print(Fore.RED + "ERROR : some necessary file are missing in the specified folder")
-        return 3
+        return 1
 
 
     # Reading info file
@@ -63,7 +63,7 @@ def makepkg(foldername):
     if INFO == 1:
 
         print("There was an error while reading the INFO File.")
-        return 4
+        return 1
 
     print("Checking necessary info...")
 
@@ -75,6 +75,7 @@ def makepkg(foldername):
         "description": False,
         "exec": False,
         "desktop": False,
+        "arch": False,
 
         "icon": False
     }
@@ -114,8 +115,16 @@ def makepkg(foldername):
         elif e == "Icon":
             info_verify["icon"] = True
 
+        elif e == "Architecture":
+            if INFO["Architecture"] == "x86-64" or INFO["Architecture"] == "arm64":
+                info_verify["arch"] = True
+            else:
+                print("\nERROR : Architecture", INFO["Architecture"], "is not supported")
+                return 2
+
         else:
             print("\nERROR :", e, ": Unknown property")
+            return 2
 
     # Check if every necessary property is there
     for v in info_verify:
@@ -128,15 +137,37 @@ def makepkg(foldername):
             print("\nERROR : Property", v, "was not specified in INFO")
             return 5
         
-    # Check if Desktop property is valid
+    os.rename(foldername, INFO["PackageName"])
+
+
+    # Check Files.tar
+    print("Checking Files.tar")
+    try:
+        open(INFO["PackageName"] + "/Files.tar", "r")
+    except FileNotFoundError:
+        print("\nERROR : Files.tar Archive not found")
+        return 1
+
+
+    try:
+        os.mkdir(".temp")
+    except FileExistsError:
+        shutil.rmtree(".temp")
+        os.mkdir(".temp")
+
+    os.system("cd .temp && tar xf ../" + INFO["PackageName"] + "/Files.tar")
+
+    print("Checking Exec...")
+    # Check if Exec is valid
+    try:
+        open(".temp/" + INFO["Exec"], "r").close()
+    except FileNotFoundError:
+        print("\nERROR : Specified Exec was not found")
+        return 1
+
     if INFO["Desktop"] == "True":
 
-        INFO["Desktop"] = True
-
-        if not info_verify["icon"]:
-
-            print("\nERROR : No icon specified while package is a desktop app")
-            return 5
+        INFO["Desktop"] = True    
     
     elif INFO["Desktop"] == "False":
 
@@ -146,6 +177,30 @@ def makepkg(foldername):
         print("\nERROR : Desktop property must be \"True\" or \"False\"")
         return 5
 
+
+    if INFO["Desktop"] is True:
+
+
+
+        print("Checking Icon...")
+        try:
+            open(".temp/" + INFO["Icon"], "r").close()
+            desktop_noicon = False
+        except FileNotFoundError:
+            print("WARNING : Specified Icon was not found")
+            desktop_noicon = True
+        except KeyError:
+            print("WARNING : No Icon specified")
+            desktop_noicon = True
+
+        except:
+            print("ERROR : Unknown Error")
+            return "unknown"
+
+        
+
+    print("Removing temp folder...")
+    shutil.rmtree(".temp")
     
     # Print package info
     print("\n=========================\nPackage Info :\n")
@@ -154,7 +209,10 @@ def makepkg(foldername):
 
         print(e, ":", INFO[e])
 
-    if input("\nContinue building package? [Y/n] : ").lower() == "y":
+    if INFO["Desktop"] and desktop_noicon is True:
+        print("The icon is missing or invalid. The package won't have any icon.")
+
+    if input("\nContinue building package? [Y:n] : ").lower() == "y":
 
         pass
 
@@ -163,19 +221,32 @@ def makepkg(foldername):
         print("Operation Aborted Successfully.")
         return 0
 
+    try:
+        open(INFO["PackageName"] + "_" + str(INFO["Version"]) + "_" + INFO["Architecture"] + ".spm", "r").close()
+
+        if input("The package " + INFO["PackageName"] + "_" + str(INFO["Version"]) + "_" + INFO["Architecture"] + ".spm already exists. Do you want to overwrite it? [Y:n] : ").lower() == "y":
+            os.remove(INFO["PackageName"] + "_" + str(INFO["Version"]) + "_" + INFO["Architecture"] + ".spm")
+
+        else:
+            print("Operation Aborted Successfully.")
+            return 0
+        
+    except FileNotFoundError:
+        pass
+    
+
     print("\nStarting building the package...")
 
     print("Moving folder...")
-    
-    os.rename(foldername, INFO["PackageName"])
 
     print("Building package...")
 
     folder_listing = []
 
+    # Create the filelist arg for the command
     for file in os.listdir(INFO["PackageName"]):
 
         folder_listing.append(foldername + "/" + file)
 
-
-    subprocess.call(["tar", "-cf", INFO["PackageName"] + ".spm"] + folder_listing)
+    # Call the tar command to create the package
+    subprocess.call(["tar", "-cf", INFO["PackageName"] + "_" + str(INFO["Version"]) + "_" + INFO["Architecture"] + ".spm"] + folder_listing)
