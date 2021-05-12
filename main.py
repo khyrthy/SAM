@@ -6,7 +6,7 @@
 import sys, subprocess
 
 # Import the spm modules
-import makepkg
+import makepkg, update
 
 # We use the colorama module to print colors in the terminal
 from colorama import Fore, Style
@@ -49,7 +49,7 @@ else :
 
             err = makepkg.makepkg(sys.argv[2])
 
-            if type(err) == int and err != None and err != 0:
+            if type(err) == int and err != 0:
 
                 print(Fore.RED + "SPM Exited with error code " + str(err) + Style.RESET_ALL)
 
@@ -61,6 +61,24 @@ else :
 
                 print(Fore.GREEN + "SPM ran successfully" + Style.RESET_ALL)
 
+    elif sys.argv[1] == "update":
+
+        if not len(sys.argv) == 2:
+            print(Fore.RED + "ERROR : Update doesn't needs any argument.")
+            print(Style.RESET_ALL)
+
+        else:
+
+            err = update.update()
+
+
+            if type(err) == int and err != 0:
+
+                print(Fore.RED + "SPM exited with error code " + str(err) + Style.RESET_ALL)
+
+            else:
+
+                print(Fore.GREEN + "SPM ran successfully" + Style.RESET_ALL)
 
     else:
 

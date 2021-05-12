@@ -35,5 +35,5 @@ def read_file(filepath, mode):
             increment += 1
 
             
-
+        file.close()
         return options        
