@@ -83,7 +83,6 @@ def makepkg(foldername):
 
     # Check global file
     for e in INFO:
-        print(INFO[e])
         if e == "PackageName":
             
             if not INFO[e].split(" ")[0] == INFO[e]:
@@ -241,8 +240,6 @@ def makepkg(foldername):
     print("Moving folder...")
 
     print("Building package...")
-
-    print("Adding launcher of the app")
 
     folder_listing = []
 

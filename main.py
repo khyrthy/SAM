@@ -83,14 +83,22 @@ else :
 
     elif sys.argv[1] == "unpkg":
         
+        err = None
+
         if len(sys.argv) == 2:
             print(Fore.RED+"ERROR : Please specify a package")
 
         elif len(sys.argv) == 3:
-            unpkg.unpkg(sys.argv[2])
+            err = unpkg.unpkg(sys.argv[2])
         
         elif len(sys.argv) == 4:
-            unpkg.unpkg(sys.argv[2],sys.argv[3])
+            err = unpkg.unpkg(sys.argv[2],sys.argv[3])
+
+        if type(err) == int and err != 0:
+            print(Fore.RED + "SPM exited with error code " + str(err) + Style.RESET_ALL)
+        
+        else:
+            print(Fore.GREEN+"SPM ran successfully"+Fore.RESET)
     
     else:
 
