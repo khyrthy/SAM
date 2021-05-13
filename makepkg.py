@@ -242,6 +242,8 @@ def makepkg(foldername):
 
     print("Building package...")
 
+    print("Adding launcher of the app")
+
     folder_listing = []
 
     # Create the filelist arg for the command

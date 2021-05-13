@@ -1,0 +1,1 @@
+echo "Salut c'est moi le package d'exemple !"
