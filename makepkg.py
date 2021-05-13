@@ -2,6 +2,7 @@
 # Used to generate a spm package
 
 import os, utils, subprocess, shutil
+from colorama import *
 
 def makepkg(foldername):
 
@@ -82,7 +83,7 @@ def makepkg(foldername):
 
     # Check global file
     for e in INFO:
-
+        print(INFO[e])
         if e == "PackageName":
             
             if not INFO[e].split(" ")[0] == INFO[e]:

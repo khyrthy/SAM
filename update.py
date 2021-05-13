@@ -1,5 +1,4 @@
 import requests
-
 SOURCES = "SOURCES"
 CACHE = "cache/"
 HEADERS = {'User-Agent': 'Mozilla/5.0 (Android 5.1; Tablet; rv:50.0) Gecko/50.0 Firefox/50.0'}

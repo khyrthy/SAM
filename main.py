@@ -4,6 +4,7 @@
 # It manages every function of the SPM program
 
 import sys, subprocess
+from unpkg import unpkg
 
 # Import the spm modules
 import makepkg, update
@@ -80,6 +81,15 @@ else :
 
                 print(Fore.GREEN + "SPM ran successfully" + Style.RESET_ALL)
 
+    elif sys.argv[1] == "unpkg":
+        print(Fore.GREEN+"unpkg begins")
+        print(len(sys.argv))
+        if len(sys.argv) == 1:
+            print(Fore.RED+"ERROR : Please specify a package")
+        elif len(sys.argv) == 3:
+            unpkg(sys.argv[2])
+        else:
+            print("ERROR")
     else:
 
         print(Fore.RED + "ERROR :", sys.argv[1], ": unknown option")
