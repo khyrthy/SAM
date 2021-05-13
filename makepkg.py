@@ -1,5 +1,5 @@
 # The makepkg module
-# Used to generate a spm package
+# Used to generate a spk package
 
 import os, utils, subprocess, shutil
 from colorama import *
@@ -223,10 +223,10 @@ def makepkg(foldername):
         return 0
 
     try:
-        open(INFO["PackageName"] + "_" + str(INFO["Version"]) + "_" + INFO["Architecture"] + ".spm", "r").close()
+        open(INFO["PackageName"] + "_" + str(INFO["Version"]) + "_" + INFO["Architecture"] + ".spk", "r").close()
 
-        if input("The package " + INFO["PackageName"] + "_" + str(INFO["Version"]) + "_" + INFO["Architecture"] + ".spm already exists. Do you want to overwrite it? [Y:n] : ").lower() == "y":
-            os.remove(INFO["PackageName"] + "_" + str(INFO["Version"]) + "_" + INFO["Architecture"] + ".spm")
+        if input("The package " + INFO["PackageName"] + "_" + str(INFO["Version"]) + "_" + INFO["Architecture"] + ".spk already exists. Do you want to overwrite it? [Y:n] : ").lower() == "y":
+            os.remove(INFO["PackageName"] + "_" + str(INFO["Version"]) + "_" + INFO["Architecture"] + ".spk")
 
         else:
             print("Operation Aborted Successfully.")
@@ -250,4 +250,4 @@ def makepkg(foldername):
         folder_listing.append(foldername + "/" + file)
 
     # Call the tar command to create the package
-    subprocess.call(["tar", "-cf", INFO["PackageName"] + "_" + str(INFO["Version"]) + "_" + INFO["Architecture"] + ".spm"] + folder_listing)
+    subprocess.call(["tar", "-cf", INFO["PackageName"] + "_" + str(INFO["Version"]) + "_" + INFO["Architecture"] + ".spk"] + folder_listing)

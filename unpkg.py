@@ -9,5 +9,5 @@ def unpkg(package,destination="/usr/share/spm/packages/"):
         return 1
     print(Fore.RESET)
     subprocess.call(["tar","-xvf",package])
-    subprocess.call(["cp","-r",package.split("_")[0],destination])
+    subprocess.call(["cp","-r",package.split("_")[0],destination+"/"+package.split("_")[0]])
     subprocess.call(["rm","-rf",package.split("_")[0]])
