@@ -2,6 +2,7 @@ import sys,os,utils,subprocess
 from colorama import *
 from time import *
 
+import install
 def unpkg(package,destination="/usr/share/spm/packages/"):
     try:
         open(package).close()
@@ -14,3 +15,13 @@ def unpkg(package,destination="/usr/share/spm/packages/"):
     subprocess.call(["rm","-rf",package.split("_")[0]])
     subprocess.call(["mkdir",destination+package.split("_")[0]+"/Files"])
     subprocess.call(["tar","-xvf",destination+package.split("_")[0]+"/Files.tar","--directory",destination+package.split("_")[0]+"/Files"])
+
+    DEPENDENCIES = open(destination+package.split("_")[0]+"/DEPENDENCIES")
+
+    for line in DEPENDENCIES:
+        package_name = line
+        err = install.install(package_name)
+
+        if type(err) == int and err != 0:
+            print(Fore.RED + "ERROR : A dependencie cannot be resolved, try running spm update")
+            return 1
