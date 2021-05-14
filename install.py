@@ -19,8 +19,8 @@ def install(package_name):
         print(Fore.RED+"The specified package doesn't exists . Try running spm update"+Fore.RESET)
         return 1
 
-    subprocess.call(["wget",package_source.rsplit()])
-    filename = package_source.rsplit().split("/")[-1]
+    subprocess.call(["wget",package_source.replace("\n","")])
+    filename = package_source.replace("\n","").split("/")[-1]
 
     err = unpkg.unpkg(filename)
 

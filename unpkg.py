@@ -19,7 +19,7 @@ def unpkg(package,destination="/usr/share/spm/packages/"):
     DEPENDENCIES = open(destination+package.split("_")[0]+"/DEPENDENCIES")
 
     for line in DEPENDENCIES:
-        package_name = line
+        package_name = line.replace("\n","")
         err = install.install(package_name)
 
         if type(err) == int and err != 0:
