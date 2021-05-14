@@ -5,5 +5,5 @@ The Swap Package Manager for Swap Packages
 
 * Colorama python module to print colors into terminal
 * Tar command
-* Wget python package
+* Wget linux command
 
