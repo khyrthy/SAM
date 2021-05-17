@@ -4,15 +4,25 @@
 # It manages every function of the SPM program
 
 import sys, subprocess
-import unpkg
 
 # Import the spm modules
-import makepkg, update, install
+import makepkg
+import unpkg
+import remove
 
 # We use the colorama module to print colors in the terminal
 from colorama import Fore, Style
 
-print(Fore.GREEN + "[SPM 0.1]" + Style.RESET_ALL)
+# search for verbose option
+
+verbose = False
+
+for option in sys.argv:
+    if option == "-v" or option == "--verbose":
+        verbose = True
+
+if verbose:
+    print(Fore.GREEN + "[SAM 0.3]" + Style.RESET_ALL)
 
 # Check if necessary packages are installed
 if subprocess.call(["which", "tar"], stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT) != 0:
@@ -27,20 +37,30 @@ if len(sys.argv) == 1:
     print("Usage :")
     print(" - spm [options] {args}")
 
+
+
 else : 
 
     if sys.argv[1] == "help":
 
         print("Usage :")
-        print(" - spm [options] {args}")
+        print(" - sam [options] {args}")
+        print(
+            "\n" + Fore.CYAN + "VALID ARGUMENTS" + Style.RESET_ALL + "\n\n" +
+
+            Fore.MAGENTA + "-v --verbose" + Style.RESET_ALL + "                     " + "Enable verbose"
+        )
         print(
             "\n" + Fore.CYAN + "COMMANDS LIST" + Style.RESET_ALL + "\n\n" +
 
-            Fore.MAGENTA + "spm makepkg [foldername]" + Style.RESET_ALL + "\n" +
-            "Creates a spm package from the specified folder" + "\n"
+            Fore.MAGENTA + "sam makepkg [foldername]" + Style.RESET_ALL + "         " +
+            "Creates an application package from the specified folder" + "\n" +
+
+            Fore.MAGENTA + "sam install [package file]" + Style.RESET_ALL + "       " +
+            "Installs a built application package"
         )
     
-    if sys.argv[1] == "makepkg":
+    elif sys.argv[1] == "makepkg":
 
         if len(sys.argv) == 2:
             print(Fore.RED + "ERROR : makepkg needs a folder")
@@ -59,50 +79,66 @@ else :
                 print(Fore.RED + "An unknown error occurred" + Style.RESET_ALL)
 
             else:
-
-                print(Fore.GREEN + "SPM ran successfully" + Style.RESET_ALL)
-
-    elif sys.argv[1] == "update":
-
-        if not len(sys.argv) == 2:
-            print(Fore.RED + "ERROR : Update doesn't needs any argument.")
-            print(Style.RESET_ALL)
-
-        else:
-
-            err = update.update()
-
-
-            if type(err) == int and err != 0:
-
-                print(Fore.RED + "SPM exited with error code " + str(err) + Style.RESET_ALL)
-
-            else:
-
-                print(Fore.GREEN + "SPM ran successfully" + Style.RESET_ALL)
+                if verbose:
+                    print(Fore.GREEN + "SAM ran successfully" + Style.RESET_ALL)
 
     elif sys.argv[1] == "install":
         
         err = None
 
         if len(sys.argv) == 2:
-            print(Fore.RED+"ERROR : Please specify a package")
+            print(Fore.RED+"ERROR : You didn't specify any package" + Style.RESET_ALL)
 
-        elif len(sys.argv) == 3:
-            err = unpkg.unpkg(sys.argv[2])
-        
-        elif len(sys.argv) == 4:
-            err = unpkg.unpkg(sys.argv[2],sys.argv[3])
+        else:
+            for package in sys.argv[2:]:
+
+                if package == "-v" or package == "--verbose":
+                    continue
+
+                try:
+                    open(package, "r")
+                except FileNotFoundError:
+                    print(Fore.RED + "ERROR : " + package + " not found")
+                    continue
+
+                if package.endswith(".spk"):
+                    err = unpkg.unpkg(package)
+                else:
+                    print(Fore.RED + "ERROR : " + package + " is not an SAM package." + Style.RESET_ALL)
+                    continue
 
         if type(err) == int and err != 0:
-            print(Fore.RED + "SPM exited with error code " + str(err) + Style.RESET_ALL)
+            print(Fore.RED + "SAM exited with error code " + str(err) + Style.RESET_ALL)
         
         else:
-            print(Fore.GREEN+"SPM ran successfully"+Fore.RESET)
+            if verbose:
+                print(Fore.GREEN+"SAM ran successfully"+Fore.RESET)
     
+    elif sys.argv[1] == "remove":
+
+        err = None
+
+        if len(sys.argv) == 2:
+            print(Fore.RED+"ERROR : You didn't specify any package" + Style.RESET_ALL)
+
+        else:
+            for package in sys.argv[2:]:
+
+                if package == "-v" or package == "--verbose":
+                    continue
+
+                err = remove.remove(package)
+
+        if type(err) == int and err != 0:
+            print(Fore.RED + "SAM exited with error code " + str(err) + Style.RESET_ALL)
+        
+        else:
+            if verbose:
+                print(Fore.GREEN+"SAM ran successfully"+Fore.RESET)
+
     else:
 
         print(Fore.RED + "ERROR :", sys.argv[1], ": unknown option")
         print(Style.RESET_ALL)
         print("Usage :")
-        print(" - spm [options] {args}")
+        print(" - sam [options] {args}")

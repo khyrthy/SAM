@@ -4,7 +4,12 @@
 import os, utils, subprocess, shutil
 from colorama import *
 
-def makepkg(foldername):
+def makepkg(folder):
+
+    if folder.endswith("/"):
+        foldername = folder[:-1]
+    else:
+        foldername = folder
 
     print("Checking specified directory...")
 
@@ -24,12 +29,6 @@ def makepkg(foldername):
     presence_info = False
     presence_files = False
 
-    # Facultative files
-    presence_facultative_dependencies = False
-    presence_facultative_preinst = False
-    presence_facultative_postinst = False
-    presence_facultative_predel = False
-    presence_facultative_postdel = False
 
 
     for f in os.listdir(foldername):
@@ -75,10 +74,8 @@ def makepkg(foldername):
         "version": False,
         "description": False,
         "exec": False,
-        "desktop": False,
         "arch": False,
-
-        "icon": False
+        "icon": False,
     }
 
     # Check global file
@@ -109,8 +106,6 @@ def makepkg(foldername):
         elif e == "Exec":
             info_verify["exec"] = True
 
-        elif e == "Desktop":
-            info_verify["desktop"] = True
 
         elif e == "Icon":
             info_verify["icon"] = True
@@ -129,10 +124,7 @@ def makepkg(foldername):
     # Check if every necessary property is there
     for v in info_verify:
 
-        if v == "icon":
-            pass
-
-        elif info_verify[v] is not True:
+        if info_verify[v] is not True:
             
             print("\nERROR : Property", v, "was not specified in INFO")
             return 5
@@ -165,37 +157,18 @@ def makepkg(foldername):
         print("\nERROR : Specified Exec was not found")
         return 1
 
-    if INFO["Desktop"] == "True":
-
-        INFO["Desktop"] = True    
-    
-    elif INFO["Desktop"] == "False":
-
-        INFO["Desktop"] = False
-
-    else:
-        print("\nERROR : Desktop property must be \"True\" or \"False\"")
-        return 5
 
 
-    if INFO["Desktop"] is True:
-
-
-
-        print("Checking Icon...")
-        try:
-            open(".temp/" + INFO["Icon"], "r").close()
-            desktop_noicon = False
-        except FileNotFoundError:
-            print("WARNING : Specified Icon was not found")
-            desktop_noicon = True
-        except KeyError:
-            print("WARNING : No Icon specified")
-            desktop_noicon = True
-
-        except:
-            print("ERROR : Unknown Error")
-            return "unknown"
+    print("Checking Icon...")
+    try:
+        open(".temp/" + INFO["Icon"], "r").close()
+        desktop_noicon = False
+    except FileNotFoundError:
+        print("WARNING : Specified Icon was not found")
+        desktop_noicon = True
+    except KeyError:
+        print("WARNING : No Icon specified")
+        desktop_noicon = True
 
         
 
@@ -209,7 +182,7 @@ def makepkg(foldername):
 
         print(e, ":", INFO[e])
 
-    if INFO["Desktop"] and desktop_noicon is True:
+    if desktop_noicon is True:
         print("The icon is missing or invalid. The package won't have any icon.")
 
     if input("\nContinue building package? [Y:n] : ").lower() == "y":
@@ -241,12 +214,14 @@ def makepkg(foldername):
 
     print("Building package...")
 
-    folder_listing = []
+    folder_listing = ""
 
     # Create the filelist arg for the command
     for file in os.listdir(INFO["PackageName"]):
 
-        folder_listing.append(foldername + "/" + file)
+        folder_listing += file + " "
+
+    packagename = INFO["PackageName"] + "_" + str(INFO["Version"]) + "_" + INFO["Architecture"] + ".spk"
 
     # Call the tar command to create the package
-    subprocess.call(["tar", "-cf", INFO["PackageName"] + "_" + str(INFO["Version"]) + "_" + INFO["Architecture"] + ".spk"] + folder_listing)
+    os.system("cd " + INFO["PackageName"] + " && " + "tar -cf " +  packagename + " " + folder_listing + " && mv " + packagename + " ../")
