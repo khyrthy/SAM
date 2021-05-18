@@ -60,7 +60,8 @@ def unpkg(package,destination="/usr/share/sam/packages/"):
   desktop_entry.write("Comment=" + INFO["Description"] + "\n")
   desktop_entry.write("Type=Application" + "\n")
   desktop_entry.write("Exec=sam-run " + INFO["PackageName"] + "\n")
-  desktop_entry.write("Icon=" + os.path.abspath(destination) + INFO["PackageName"] + "/" + INFO["Icon"] + "\n")
+  desktop_entry.write("Terminal=" + str(INFO["Terminal"]).lower() + "\n")
+  desktop_entry.write("Icon=" + os.path.abspath(destination) + "/" + INFO["PackageName"] + "/" + INFO["Icon"] + "\n")
 
   desktop_entry.close()
 

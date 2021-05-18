@@ -77,6 +77,7 @@ def makepkg(folder, supported_archs):
         "exec": False,
         "arch": False,
         "icon": False,
+        "terminal": False,
     }
 
     # Check global file
@@ -126,6 +127,20 @@ def makepkg(folder, supported_archs):
 
             else:
                 info_verify["arch"] = True
+
+        elif e == "Terminal":
+
+            if INFO["Terminal"].lower() == "true":
+                INFO["Terminal"] = True
+                info_verify["terminal"] = True
+
+            elif INFO["Terminal"].lower() == "false":
+                INFO["Terminal"] = False
+                info_verify["terminal"] = True
+
+            else:
+                print("\nERROR : Property Terminal must be true or false")
+                return 1
 
         else:
             print("\nERROR :", e, ": Unknown property")
