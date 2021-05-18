@@ -19,7 +19,7 @@ And there you go!
 
 ## Wiki
 
-Check the [wiki](https://github.com/khyrhy/sam/wiki) for complete documentation!
+Check the [wiki](https://github.com/khyrthy/SAM/wiki) for complete documentation!
 
 ## Credits
 
