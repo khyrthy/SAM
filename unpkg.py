@@ -22,6 +22,11 @@ def unpkg(package,destination="/usr/share/sam/packages/"):
   print(Fore.CYAN + "\n-> Reading INFO...")
   INFO = utils.read_file(cache + "/INFO", "options")
 
+  print(Fore.CYAN + "\n-> Verifying package architecture...")
+  if not INFO["Architecture"] == utils.read_file("/usr/share/sam/config", "options")["Architecture"]:
+    print(Fore.RED + "ERROR : Unknown architecture " + INFO["Architecture"] + ". Must be " + utils.read_file("/usr/share/sam/config", "options")["Architecture"] + Style.RESET_ALL)
+    return 2
+
   print(Fore.CYAN + "\n-> Checking wether package is in the db")
   for element in utils.read_file("/usr/share/sam/installed.db", "options"):
     if element.split(" ")[0] == INFO["PackageName"]:

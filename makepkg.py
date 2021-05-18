@@ -4,7 +4,8 @@
 import os, utils, subprocess, shutil
 from colorama import *
 
-def makepkg(folder):
+
+def makepkg(folder, supported_archs):
 
     if folder.endswith("/"):
         foldername = folder[:-1]
@@ -111,11 +112,20 @@ def makepkg(folder):
             info_verify["icon"] = True
 
         elif e == "Architecture":
-            if INFO["Architecture"] == "x86-64" or INFO["Architecture"] == "arm64":
-                info_verify["arch"] = True
-            else:
+            current_arch_supported = False
+
+            for arch in supported_archs:
+                if INFO["Architecture"] == arch:
+                    current_arch_supported = True
+
+
+
+            if not current_arch_supported:
                 print("\nERROR : Architecture", INFO["Architecture"], "is not supported")
                 return 2
+
+            else:
+                info_verify["arch"] = True
 
         else:
             print("\nERROR :", e, ": Unknown property")

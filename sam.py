@@ -18,6 +18,9 @@ from colorama import Fore, Style
 
 verbose = False
 
+# the list of supported archs
+supported_archs = ["x86", "x86-64", "arm64", "aarch64", "armv6", "armv7", "armv8", "arm64", "aarch64"]
+
 for option in sys.argv:
     if option == "-v" or option == "--verbose":
         verbose = True
@@ -75,7 +78,7 @@ else :
 
         else:
 
-            err = makepkg.makepkg(sys.argv[2])
+            err = makepkg.makepkg(sys.argv[2], supported_archs)
 
             if type(err) == int and err != 0:
                 if verbose:
