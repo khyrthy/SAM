@@ -2,16 +2,16 @@ import sys,os,utils,subprocess
 from colorama import *
 from time import *
 
-cache = "cache"
-apps = "apps"
+cache = "/var/cache/sam"
+apps = "/usr/share/applications"
 
 
-def unpkg(package,destination="./packages/"):
+def unpkg(package,destination="/usr/share/sam/packages/"):
 
 
 
   print(Fore.CYAN + "\n-> Extracting package..." + Style.RESET_ALL)
-  os.system("cp " + package + " " + cache + "/ && cd cache && tar xvf " + package + " && rm " + package)
+  os.system("cp " + package + " " + cache + "/ && cd " + cache + " && tar xvf " + package + " && rm " + package)
 
   
 
@@ -19,7 +19,7 @@ def unpkg(package,destination="./packages/"):
   INFO = utils.read_file(cache + "/INFO", "options")
 
   print(Fore.CYAN + "\n-> Checking wether package is in the db")
-  for element in utils.read_file("installed.db", "options"):
+  for element in utils.read_file("/usr/share/sam/installed.db", "options"):
     if element.split(" ")[0] == INFO["PackageName"]:
       if element.split(" ")[1] == INFO["Version"]:
         print(Fore.GREEN + INFO["PackageName"] + " is already at the latest version (" + INFO["Version"] + ")" + Style.RESET_ALL)
@@ -36,10 +36,10 @@ def unpkg(package,destination="./packages/"):
     return 0
 
   print(Fore.CYAN + "\n-> Creating install directory..." + Style.RESET_ALL)
-  os.system("mkdir " + destination + "/" + INFO["PackageName"])
+  os.system("mkdir " + destination + INFO["PackageName"])
 
   print(Fore.CYAN + "\n-> Extracting Files.tar in destination folder..." + Style.RESET_ALL)
-  os.system("cp -r cache/Files.tar " + destination + "/" + INFO["PackageName"] + " && cd " + destination + INFO["PackageName"] + " && tar xvf Files.tar && rm Files.tar")
+  os.system("cp -r " + cache + "/Files.tar " + destination + INFO["PackageName"] + " && cd " + destination + INFO["PackageName"] + " && tar xvf Files.tar && rm Files.tar")
 
   
   print(Fore.CYAN + "`\n-> Creating desktop entry..." + Style.RESET_ALL)
@@ -51,7 +51,7 @@ def unpkg(package,destination="./packages/"):
   desktop_entry.write("Comment=" + INFO["Description"] + "\n")
   desktop_entry.write("Type=Application" + "\n")
   desktop_entry.write("Exec=sam-run " + INFO["PackageName"] + "\n")
-  desktop_entry.write("Icon=" + os.path.abspath(destination) + "/" + INFO["PackageName"] + "/" + INFO["Icon"] + "\n")
+  desktop_entry.write("Icon=" + os.path.abspath(destination) + INFO["PackageName"] + "/" + INFO["Icon"] + "\n")
 
   desktop_entry.close()
 
@@ -61,7 +61,7 @@ def unpkg(package,destination="./packages/"):
   os.system("rm -rf " + cache + "/*")
 
   print(Fore.CYAN + "\n-> Updating database..." + Style.RESET_ALL)
-  database = open("installed.db", "w")
+  database = open("/usr/share/sam/installed.db", "w")
   database.write(INFO["PackageName"] + " " + INFO["Version"] + "=" + INFO["Exec"] + "\n")
 
   print(Fore.GREEN + "\nSuccessfully Installed " + INFO["Name"] + " " + INFO["Version"] + Style.RESET_ALL)

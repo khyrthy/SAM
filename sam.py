@@ -57,7 +57,10 @@ else :
             "Creates an application package from the specified folder" + "\n" +
 
             Fore.MAGENTA + "sam install [package file]" + Style.RESET_ALL + "       " +
-            "Installs a built application package"
+            "Installs a built application package" + "\n" +
+
+            Fore.MAGENTA + "sam remove [package]" + Style.RESET_ALL + "             " +
+            "Removes an installed package"
         )
     
     elif sys.argv[1] == "makepkg":
@@ -71,12 +74,12 @@ else :
             err = makepkg.makepkg(sys.argv[2])
 
             if type(err) == int and err != 0:
-
-                print(Fore.RED + "SPM Exited with error code " + str(err) + Style.RESET_ALL)
+                if verbose:
+                    print(Fore.RED + "SPM Exited with error code " + str(err) + Style.RESET_ALL)
 
             elif err == "unknown":
-
-                print(Fore.RED + "An unknown error occurred" + Style.RESET_ALL)
+                if verbose:
+                    print(Fore.RED + "An unknown error occurred" + Style.RESET_ALL)
 
             else:
                 if verbose:
@@ -108,7 +111,8 @@ else :
                     continue
 
         if type(err) == int and err != 0:
-            print(Fore.RED + "SAM exited with error code " + str(err) + Style.RESET_ALL)
+            if verbose:
+                print(Fore.RED + "SAM exited with error code " + str(err) + Style.RESET_ALL)
         
         else:
             if verbose:
@@ -130,7 +134,8 @@ else :
                 err = remove.remove(package)
 
         if type(err) == int and err != 0:
-            print(Fore.RED + "SAM exited with error code " + str(err) + Style.RESET_ALL)
+            if verbose:
+                print(Fore.RED + "SAM exited with error code " + str(err) + Style.RESET_ALL)
         
         else:
             if verbose:

@@ -11,10 +11,10 @@ else:
 
     ran = False
 
-    for element in utils.read_file("installed.db", "options"):
+    for element in utils.read_file("/usr/share/sam/installed.db", "options"):
 
         if element.split(" ")[0] == sys.argv[1]:
-            os.system("cd ./packages/" + element.split(" ")[0] + " && ./" + utils.read_file("installed.db", "options")[element])
+            os.system("cd /usr/share/sam/packages/" + element.split(" ")[0] + " && ./" + utils.read_file("/usr/share/sam/installed.db", "options")[element])
             ran = True
 
 

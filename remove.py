@@ -6,7 +6,7 @@ def remove(package):
     print(Fore.CYAN + "\n-> Scanning database to find package " + package + "..." + Style.RESET_ALL)
     found = False
 
-    for element in utils.read_file("installed.db", "options"):
+    for element in utils.read_file("/usr/share/sam/installed.db", "options"):
         if element.split(" ")[0] == package:
             found = True
 
@@ -21,13 +21,13 @@ def remove(package):
         return 0
 
     print(Fore.CYAN + "\n-> Removing package repertory..." + Style.RESET_ALL)
-    os.system("rm -rf ./packages/" + package)
+    os.system("rm -rf /usr/share/sam/packages/" + package)
 
     print(Fore.CYAN + "\n-> Removing Desktop Entry..." + Style.RESET_ALL)
-    os.system("rm ./apps/" + package + ".desktop")
+    os.system("rm /usr/share/applications/" + package + ".desktop")
 
     print(Fore.CYAN + "\n-> Removing package from database..." + Style.RESET_ALL)
-    database = open("installed.db", "r")
+    database = open("/usr/share/sam/installed.db", "r")
     database_content = database.readlines()
     database.close()
 
@@ -38,7 +38,7 @@ def remove(package):
 
         iterator += 1
     
-    database = open("installed.db", "w+")
+    database = open("/usr/share/sam/installed.db", "w+")
 
     for line in database_content:
         database.write(line)
