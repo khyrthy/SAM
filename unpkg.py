@@ -11,7 +11,7 @@ def unpkg(package,destination="/usr/share/sam/packages/"):
   # Check if root
   if os.getuid() != 0:
       # Program is not runned as root
-      print(Fore.RED + "ERROR : Install command must be runned as root")
+      print(Fore.RED + "ERROR : Install command must be runned as root" + Style.RESET_ALL)
       return 1
 
   print(Fore.CYAN + "\n-> Extracting package..." + Style.RESET_ALL)
