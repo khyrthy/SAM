@@ -17,6 +17,14 @@ sudo ./install.sh
 
 And there you go!
 
+## Removing
+
+To remove, just run `uninstall.sh` as root:
+```bash
+chmod +x uninstall.sh
+sudo ./uninstall.sh
+```
+
 ## Wiki
 
 Check the [wiki](https://github.com/khyrthy/SAM/wiki) for complete documentation!
