@@ -9,6 +9,7 @@ import sys, subprocess
 import makepkg
 import unpkg
 import remove
+import utils
 
 # We use the colorama module to print colors in the terminal
 from colorama import Fore, Style
@@ -60,7 +61,10 @@ else :
             "Installs a built application package" + "\n" +
 
             Fore.MAGENTA + "sam remove [package]" + Style.RESET_ALL + "             " +
-            "Removes an installed package"
+            "Removes an installed package" + "\n" +
+
+            Fore.MAGENTA + "sam list" + Style.RESET_ALL + "                         " + 
+            "Lists all the installed packages"
         )
     
     elif sys.argv[1] == "makepkg":
@@ -132,6 +136,41 @@ else :
                     continue
 
                 err = remove.remove(package)
+
+        if type(err) == int and err != 0:
+            if verbose:
+                print(Fore.RED + "SAM exited with error code " + str(err) + Style.RESET_ALL)
+        
+        else:
+            if verbose:
+                print(Fore.GREEN+"SAM ran successfully"+Fore.RESET)
+
+    elif sys.argv[1] == "list":
+
+        err = None
+
+
+        if not len(sys.argv) == 2 and not verbose:
+
+            print(Fore.RED + "ERROR : list doesn't take any argument" + Style.RESET_ALL)
+            err = 1
+        
+        elif verbose and not len(sys.argv) == 3:
+
+            print(Fore.RED + "ERROR : list doesn't take any argument" + Style.RESET_ALL)
+            err = 1
+
+        else:
+
+            if not open("/usr/share/sam/installed.db","r").readlines() == []:
+                print(Fore.CYAN + "---- INSTALLED PACKAGES ----" + Style.RESET_ALL)
+
+                for element in utils.read_file("/usr/share/sam/installed.db", "options"):
+                    print(element)
+
+            else:
+
+                print(Fore.CYAN + "No package installed." + Style.RESET_ALL)
 
         if type(err) == int and err != 0:
             if verbose:
