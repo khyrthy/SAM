@@ -9,4 +9,18 @@ The Swap Package Manager for Swap Packages
 
 ## Installing
 
-df
+To install, just run `install.sh` as root:
+```bash
+chmod +x install.sh
+sudo ./install.sh
+```
+
+And there you go!
+
+## Wiki
+
+Check the wiki for complete documentation!
+
+## Credits
+
+**Original creator (SPM) :** Nippyfus (https://github.com/nippyfus)
