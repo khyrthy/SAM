@@ -3,6 +3,12 @@ from colorama import *
 
 def remove(package):
 
+    # Check if root
+    if os.getuid() != 0:
+        # Program is not runned as root
+        print(Fore.RED + "ERROR : Remove command must be runned as root")
+        return 1
+
     print(Fore.CYAN + "\n-> Scanning database to find package " + package + "..." + Style.RESET_ALL)
     found = False
 

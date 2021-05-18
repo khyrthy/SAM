@@ -8,7 +8,11 @@ apps = "/usr/share/applications"
 
 def unpkg(package,destination="/usr/share/sam/packages/"):
 
-
+  # Check if root
+  if os.getuid() != 0:
+      # Program is not runned as root
+      print(Fore.RED + "ERROR : Install command must be runned as root")
+      return 1
 
   print(Fore.CYAN + "\n-> Extracting package..." + Style.RESET_ALL)
   os.system("cp " + package + " " + cache + "/ && cd " + cache + " && tar xvf " + package + " && rm " + package)
